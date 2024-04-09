@@ -7,13 +7,6 @@ let main = async () => {
   let userPin: string = "0000";
   let currentBalance: number = 10000;
 
-  //Withdraw balance update
-let balanceWithdraw = (currentBalance: number, amount: number) => {
-    currentBalance -= amount;
-    console.log(
-      `You have withdrawn $${amount} \n (Your remaining balance is $${currentBalance})`
-    );
-};
 
   // Welcome Message
   console.log("\n >>>> Welcome to ATM <<<<\n");
@@ -36,7 +29,7 @@ let balanceWithdraw = (currentBalance: number, amount: number) => {
 
   if (id === userID && pin === userPin) {
 
-    func(currentBalance, balanceWithdraw);
+    func(currentBalance);
 
   } else {
     console.log("\n Invalid ID or PIN");
@@ -44,12 +37,9 @@ let balanceWithdraw = (currentBalance: number, amount: number) => {
 };
 
 
-
 // ATM functionality
-let func = async (currentBalance: number, balanceWithdraw:any) => {
+let func = async (currentBalance: number) => {
     
-  // condition for continuing transactions
-//   let programRestart: boolean = false;
 
   // Login Message
   console.log("\n Login Successful\n");
@@ -68,24 +58,13 @@ let func = async (currentBalance: number, balanceWithdraw:any) => {
     console.log(`Your current Balacne is $${currentBalance}\n`);
   } else if (choice === "Cash Withdrawal") {
 
-    let withdrawAmount = await inquirer.prompt({
-      name: "amount",
-      type: "number",
-      message: "Please enter the amount to withdraw: $",
-    });
+   
+    cashWithdrawl(currentBalance);
 
-    let { amount } = withdrawAmount;
-    
-    if (amount <= currentBalance) {
 
-      balanceWithdraw(currentBalance, amount);
-
-    } else {
-      console.log("\n Insufficient Balance\n");
-    }
   } else if (choice === "Fast Cash") {
 
-        fastCash(currentBalance, balanceWithdraw);
+        fastCash(currentBalance);
 
   } else {
     console.log("Thank you for using ATM\n");
@@ -93,10 +72,38 @@ let func = async (currentBalance: number, balanceWithdraw:any) => {
 };
 
 
+// Cash Withdrawl Functionality
+let cashWithdrawl = async (currentBalance:number)=> {
+
+    let withdrawAmount = await inquirer.prompt({
+        name: "amount",
+        type: "number",
+        message: "Please enter the amount to withdraw: $",
+      });
+  
+      let { amount } = withdrawAmount;
+      
+      if (amount <= currentBalance) {
+  
+        balanceWithdraw(currentBalance, amount);
+  
+      } else {
+        console.log("\n Insufficient Balance\n");
+      }
+}
+
+//Withdraw balance update
+let balanceWithdraw = (currentBalance: number, amount: number) => {
+    currentBalance -= amount;
+    console.log(
+      `You have withdrawn $${amount} \n (Your remaining balance is $${currentBalance})`
+    );
+};
+
 
 // Fast Cash FUnctionality
 
-let fastCash = async (currentBalance:number, balanceWithdraw: any) =>{
+let fastCash = async (currentBalance:number) =>{
 
     console.log("\n Fast Cash Service\n");
 
