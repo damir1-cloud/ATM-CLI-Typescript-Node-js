@@ -1,12 +1,13 @@
 #! /usr/bin/env node
 import inquirer from "inquirer";
+import chalk from 'chalk';
 // Main function
 let main = async () => {
     let userID = "dx2y";
     let userPin = "0000";
     let currentBalance = 10000;
     // Welcome Message
-    console.log("\n >>>> Welcome to ATM <<<<\n");
+    console.log(chalk.bold.green("\n >>>> Welcome to ATM <<<<\n"));
     let userData = await inquirer.prompt([
         {
             name: "id",
@@ -25,19 +26,17 @@ let main = async () => {
         func(currentBalance);
     }
     else {
-        console.log("\n Invalid ID or PIN");
+        console.log(chalk.red("\n Invalid ID or PIN"));
     }
 };
 // ATM functionality
 let func = async (currentBalance) => {
-    // condition for continuing transactions
-    //   let programRestart: boolean = false;
     // Login Message
-    console.log("\n Login Successful\n");
+    console.log(chalk.green("\n Login Successful\n"));
     let atmFunctionality = await inquirer.prompt({
         name: "choice",
         type: "list",
-        message: "Please select the operation to perform ",
+        message: chalk.blue("Please select the operation to perform "),
         choices: ["Balance Inquiry", "Cash Withdrawal", "Fast Cash", "Exit"],
     });
     let { choice } = atmFunctionality;
@@ -67,13 +66,13 @@ let cashWithdrawl = async (currentBalance) => {
         balanceWithdraw(currentBalance, amount);
     }
     else {
-        console.log("\n Insufficient Balance\n");
+        console.log(chalk.red("\n Insufficient Balance\n"));
     }
 };
 //Withdraw balance update
 let balanceWithdraw = (currentBalance, amount) => {
     currentBalance -= amount;
-    console.log(`You have withdrawn $${amount} \n (Your remaining balance is $${currentBalance})`);
+    console.log(`You have withdrawn $${amount} \n (Your remaining balance is $${chalk.green(currentBalance)})`);
 };
 // Fast Cash FUnctionality
 let fastCash = async (currentBalance) => {

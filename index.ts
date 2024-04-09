@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 import inquirer from "inquirer";
+import chalk from 'chalk';
 
 // Main function
 let main = async () => {
@@ -7,9 +8,8 @@ let main = async () => {
   let userPin: string = "0000";
   let currentBalance: number = 10000;
 
-
   // Welcome Message
-  console.log("\n >>>> Welcome to ATM <<<<\n");
+  console.log(chalk.bold.green("\n >>>> Welcome to ATM <<<<\n"));
 
   let userData: { id: string; pin: string } = await inquirer.prompt([
     {
@@ -28,26 +28,21 @@ let main = async () => {
   let { id, pin } = userData;
 
   if (id === userID && pin === userPin) {
-
     func(currentBalance);
-
   } else {
-    console.log("\n Invalid ID or PIN");
+    console.log(chalk.red("\n Invalid ID or PIN"));
   }
 };
 
-
 // ATM functionality
 let func = async (currentBalance: number) => {
-    
-
   // Login Message
-  console.log("\n Login Successful\n");
+  console.log(chalk.green("\n Login Successful\n"));
 
   let atmFunctionality = await inquirer.prompt({
     name: "choice",
     type: "list",
-    message: "Please select the operation to perform ",
+    message: chalk.blue("Please select the operation to perform "),
     choices: ["Balance Inquiry", "Cash Withdrawal", "Fast Cash", "Exit"],
   });
 
@@ -57,79 +52,63 @@ let func = async (currentBalance: number) => {
   if (choice === "Balance Inquiry") {
     console.log(`Your current Balacne is $${currentBalance}\n`);
   } else if (choice === "Cash Withdrawal") {
-
-   
     cashWithdrawl(currentBalance);
-
-
   } else if (choice === "Fast Cash") {
-
-        fastCash(currentBalance);
-
+    fastCash(currentBalance);
   } else {
     console.log("Thank you for using ATM\n");
   }
 };
 
-
 // Cash Withdrawl Functionality
-let cashWithdrawl = async (currentBalance:number)=> {
+let cashWithdrawl = async (currentBalance: number) => {
+  let withdrawAmount = await inquirer.prompt({
+    name: "amount",
+    type: "number",
+    message: "Please enter the amount to withdraw: $",
+  });
 
-    let withdrawAmount = await inquirer.prompt({
-        name: "amount",
-        type: "number",
-        message: "Please enter the amount to withdraw: $",
-      });
-  
-      let { amount } = withdrawAmount;
-      
-      if (amount <= currentBalance) {
-  
-        balanceWithdraw(currentBalance, amount);
-  
-      } else {
-        console.log("\n Insufficient Balance\n");
-      }
-}
+  let { amount } = withdrawAmount;
+
+  if (amount <= currentBalance) {
+    balanceWithdraw(currentBalance, amount);
+  } else {
+    console.log(chalk.red("\n Insufficient Balance\n"));
+  }
+};
 
 //Withdraw balance update
 let balanceWithdraw = (currentBalance: number, amount: number) => {
-    currentBalance -= amount;
-    console.log(
-      `You have withdrawn $${amount} \n (Your remaining balance is $${currentBalance})`
-    );
+  currentBalance -= amount;
+  console.log(
+    `You have withdrawn $${amount} \n (Your remaining balance is $${chalk.green(currentBalance)})`
+  );
 };
-
 
 // Fast Cash FUnctionality
 
-let fastCash = async (currentBalance:number) =>{
+let fastCash = async (currentBalance: number) => {
+  console.log("\n Fast Cash Service\n");
 
-    console.log("\n Fast Cash Service\n");
+  let fastCashAmount = await inquirer.prompt({
+    name: "fastAmount",
+    type: "list",
+    message: "Please select the amount to withdraw: ",
+    choices: ["$20", "$50", "$100", "$200", "$500"],
+  });
 
-    let fastCashAmount = await inquirer.prompt({
-        name: "fastAmount",
-        type: "list",
-        message: "Please select the amount to withdraw: ",
-        choices: ["$20", "$50", "$100", "$200", "$500"],
-    });
-
-    let { fastAmount } = fastCashAmount;
-if (fastAmount === "$20") {
-    balanceWithdraw (currentBalance, 20);
-} else if (fastAmount === "$50") {
-    balanceWithdraw (currentBalance, 50);
-
-} else if (fastAmount === "$100") {
-    balanceWithdraw (currentBalance, 100);
-
-} else if (fastAmount === "$200") {
-    balanceWithdraw (currentBalance, 200);
-
-} else if (fastAmount === "$500") {
-    balanceWithdraw (currentBalance, 500);
-}
-
-}
+  let { fastAmount } = fastCashAmount;
+  if (fastAmount === "$20") {
+    balanceWithdraw(currentBalance, 20);
+  } else if (fastAmount === "$50") {
+    balanceWithdraw(currentBalance, 50);
+  } else if (fastAmount === "$100") {
+    balanceWithdraw(currentBalance, 100);
+  } else if (fastAmount === "$200") {
+    balanceWithdraw(currentBalance, 200);
+  } else if (fastAmount === "$500") {
+    balanceWithdraw(currentBalance, 500);
+  }
+};
 
 main();
